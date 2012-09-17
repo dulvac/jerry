@@ -1,0 +1,1 @@
+java -cp "conf/:target/jserver-1.0.jar:target/dependency/*" com.dulvac.jerry.Server
