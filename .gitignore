@@ -2,3 +2,5 @@ target/**
 .idea/**
 www
 *.iml
+*.ipr
+*.iws
