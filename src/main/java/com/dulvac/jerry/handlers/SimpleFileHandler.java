@@ -43,7 +43,7 @@ public class SimpleFileHandler implements HttpRequestHandler {
 
   public static final StringEntity notFoundHTML = new StringEntity("<html><body><h1>File not found</h1></body></html>",
                                                                    ContentType.create("text/html", "UTF-8"));
-  public static final StringEntity forbiddenHTML = new StringEntity("<html><body><h1>No!</h1></body></html>",
+  public static final StringEntity forbiddenHTML = new StringEntity("<html><body><h1>No! Forbidden</h1></body></html>",
                                                                     ContentType.create("text/html", "UTF-8"));
 
   public SimpleFileHandler(final String filesRoot) {
