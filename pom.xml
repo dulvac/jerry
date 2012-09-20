@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dulvac.jserver</groupId>
-    <artifactId>jserver</artifactId>
+    <artifactId>jerry</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>jserver</name>
+    <name>jerry</name>
     <url>http://maven.apache.org</url>
 
     <properties>
