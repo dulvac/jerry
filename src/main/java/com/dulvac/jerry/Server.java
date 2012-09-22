@@ -22,6 +22,7 @@ public class Server {
 
   public void start(int port) throws IOException {
     Thread rl = new Thread(new RequestListener(port, this.filesRoot));
+    rl.setName("listener-" + port);
     rl.setDaemon(false);
     rl.start();
   }
