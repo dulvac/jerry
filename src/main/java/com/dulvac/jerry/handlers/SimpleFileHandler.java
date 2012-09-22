@@ -24,6 +24,24 @@ import java.util.Locale;
 public class SimpleFileHandler implements HttpRequestHandler {
   private static final Logger logger = LoggerFactory.getLogger(SimpleFileHandler.class.getName());
   private final String filesRoot;
+  private String[] welcomeFiles = {"index.html", "index.htm"};
+
+  public String[] getWelcomeFiles() {
+    return welcomeFiles;
+  }
+
+  public void setWelcomeFiles(String[] welcomeFiles) {
+    this.welcomeFiles = welcomeFiles;
+  }
+
+  public File getWelcomeFile(File dir) {
+    for (int i = 0; i < welcomeFiles.length; i++) {
+      // TODO: This might be expensive
+      File welcomeFile = new File(dir, welcomeFiles[i]);
+      if (welcomeFile.exists() && !welcomeFile.isDirectory()) return welcomeFile;
+    }
+    return dir;
+  }
 
   // TODO: Support more methods
   private static enum METHODS {
@@ -43,7 +61,7 @@ public class SimpleFileHandler implements HttpRequestHandler {
 
   public static final StringEntity notFoundHTML = new StringEntity("<html><body><h1>File not found</h1></body></html>",
                                                                    ContentType.create("text/html", "UTF-8"));
-  public static final StringEntity forbiddenHTML = new StringEntity("<html><body><h1>No! Forbidden</h1></body></html>",
+  public static final StringEntity forbiddenHTML = new StringEntity("<html><body><h1>Forbidden</h1></body></html>",
                                                                     ContentType.create("text/html", "UTF-8"));
 
   public SimpleFileHandler(final String filesRoot) {
@@ -60,23 +78,28 @@ public class SimpleFileHandler implements HttpRequestHandler {
     final String clientAddress = ((HttpInetConnection) context.getAttribute(ExecutionContext.HTTP_CONNECTION))
       .getRemoteAddress().getHostAddress();
     
-    final File file = new File(this.filesRoot, URLDecoder.decode(target, "UTF-8"));
+    File file = new File(this.filesRoot, URLDecoder.decode(target, "UTF-8"));
+    if (file.isDirectory()) {
+        file = getWelcomeFile(file);
+    }
+    String filePath = file.getPath();
+    // Build response
     if (!file.exists()) {
       response.setStatusCode(HttpStatus.SC_NOT_FOUND);
       response.setEntity(this.notFoundHTML);
-      logger.info("Request from {}. File {} not found", clientAddress, file.getPath());
+      logger.info("Request from {}. File {} not found", clientAddress, filePath);
 
-    } else if (!file.canRead() || file.isDirectory()) {
+    } else if (!file.canRead()) {
       response.setStatusCode(HttpStatus.SC_FORBIDDEN);
       response.setEntity(this.forbiddenHTML);
-      logger.info("Request from {}. Can't read file {}", clientAddress, file.getPath());
+      logger.info("Request from {}. Can't read file {}", clientAddress, filePath);
       
     } else {
       response.setStatusCode(HttpStatus.SC_OK);
       // TODO: Support different kinds of files/ mime-types
       FileEntity body = new FileEntity(file, ContentType.create("text/html", (Charset) null));
       response.setEntity(body);
-      logger.info("Request from {}. Sending file {}", clientAddress, file.getPath());
+      logger.info("Request from {}. Sending file {}", clientAddress, filePath);
     }
   }
 }
