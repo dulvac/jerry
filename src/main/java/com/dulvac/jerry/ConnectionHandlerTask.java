@@ -13,13 +13,22 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 
-public class ConnectionHandler implements Runnable {
-  private static final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class.getName());
+/**
+ * Handles an HTTP client connection
+ *
+ */
+public class ConnectionHandlerTask implements Runnable {
+  private static final Logger logger = LoggerFactory.getLogger(ConnectionHandlerTask.class.getName());
   private final HttpService httpservice;
   private final HttpServerConnection conn;
   private final String clientAddress;
 
-  public ConnectionHandler(final HttpService httpservice, final HttpServerConnection conn) {
+  /**
+   *
+   * @param httpservice 
+   * @param conn
+   */
+  public ConnectionHandlerTask(final HttpService httpservice, final HttpServerConnection conn) {
     super();
     this.httpservice = httpservice;
     this.conn = conn;
@@ -27,7 +36,7 @@ public class ConnectionHandler implements Runnable {
   }
 
   public void run() {
-    logger.debug("Running new ConnectionHandler thread");
+    logger.debug("Running new ConnectionHandlerTask thread");
     HttpContext context = new BasicHttpContext(null);
     try {
       while (!Thread.interrupted() && this.conn.isOpen()) {

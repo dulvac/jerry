@@ -21,19 +21,37 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
+/**
+ * A simple HTTP file handler
+ * Only supports GET and HEAD requests and text/html mime type
+ * @see HttpRequestHandler
+ */
 public class SimpleFileHandler implements HttpRequestHandler {
   private static final Logger logger = LoggerFactory.getLogger(SimpleFileHandler.class.getName());
   private final String filesRoot;
   private String[] welcomeFiles = {"index.html", "index.htm"};
 
+  /**
+   *
+   * @return The array of index file names 
+   */
   public String[] getWelcomeFiles() {
     return welcomeFiles;
   }
 
+  /**
+   *
+   * @param welcomeFiles Array of file names to use when a request is done on a directory
+   */
   public void setWelcomeFiles(String[] welcomeFiles) {
     this.welcomeFiles = welcomeFiles;
   }
 
+  /**
+   * Return the first index file which exists in this directory path, if it exists
+   * @param dir The path for which to return the index file, if it exists.
+   * @return The full path of first index file which exists in this directory path, if it exists, otherwise return dir
+   */
   public File getWelcomeFile(File dir) {
     for (int i = 0; i < welcomeFiles.length; i++) {
       // TODO: This might be expensive
@@ -49,6 +67,12 @@ public class SimpleFileHandler implements HttpRequestHandler {
     HEAD
   }
 
+  /**
+   *
+   * @param request The client HTTP request
+   * @return The HTTP type (e.g. GET) of this request
+   * @throws MethodNotSupportedException If the method is not supported by this implementation
+   */
   public static String getMethod(HttpRequest request) throws MethodNotSupportedException {
     String method = request.getRequestLine().getMethod().toUpperCase(Locale.ENGLISH);
     try {
@@ -59,22 +83,34 @@ public class SimpleFileHandler implements HttpRequestHandler {
     return method;
   }
 
-  public static final StringEntity notFoundHTML = new StringEntity("<html><body><h1>File not found</h1></body></html>",
+  private static final StringEntity notFoundHTML = new StringEntity("<html><body><h1>File not found</h1></body></html>",
                                                                    ContentType.create("text/html", "UTF-8"));
-  public static final StringEntity forbiddenHTML = new StringEntity("<html><body><h1>Forbidden</h1></body></html>",
+  private static final StringEntity forbiddenHTML = new StringEntity("<html><body><h1>Forbidden</h1></body></html>",
                                                                     ContentType.create("text/html", "UTF-8"));
 
+  /**
+   *
+   * @param filesRoot The document root for the files to handle
+   */
   public SimpleFileHandler(final String filesRoot) {
     super();
     this.filesRoot = filesRoot;
   }
 
+  /**
+   * @see HttpRequestHandler#handle(org.apache.http.HttpRequest, org.apache.http.HttpResponse, org.apache.http.protocol.HttpContext) 
+   * @param request
+   * @param response
+   * @param context
+   * @throws HttpException
+   * @throws IOException
+   */
   public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context)
     throws HttpException, IOException {
 
     final String method = getMethod(request);
     final String target = request.getRequestLine().getUri();
-    // get client ip for logging TODO: ugly; make this lazy
+    // get client address for logging TODO: ugly; make this lazy
     final String clientAddress = ((HttpInetConnection) context.getAttribute(ExecutionContext.HTTP_CONNECTION))
       .getRemoteAddress().getHostAddress();
     

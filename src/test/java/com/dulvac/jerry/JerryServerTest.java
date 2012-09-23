@@ -4,7 +4,7 @@ import java.util.*;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-public class ServerTest {
+public class JerryServerTest {
 
     private Collection collection;
 
