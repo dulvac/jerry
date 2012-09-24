@@ -12,8 +12,10 @@ Also, I couldn't help but get inspiration from [Jetty](https://github.com/eclips
 * java 5 or higher
 
 # Building & Running
-run `mvn package` to... well, package. Configuration stays outside so it's easy to change.
-run `bin/jerry_server.sh` or run the `JerryServer` class with `target/dependency`,
+```mvn package``` to... well, package.
+
+Configuration stays outside so it's easy to change.
+```bin/jerry_server.sh``` or run the `JerryServer` class with `target/dependency`,
 `conf/` and obviously the jar as part of the CLASSPATH if Unix is not your flavour.
 
 ## Logging
@@ -26,8 +28,9 @@ but it just got to beta.
 
 ## Configuration
 Configuration files are found in `conf/`.
-`logback.xml` - logging configuration; look at [the manual](http://logback.qos.ch/manual/) if you need help.
-`jerry.xml` - server configuration; Allows adding multiple listeners on different ports and with different document roots.
+* `logback.xml` - logging configuration; look at [the manual](http://logback.qos.ch/manual/) if you need help.
+* `jerry.xml` - server configuration; Allows adding multiple listeners on different ports and with different document
+roots.
 
 ## Testing
 TBD
