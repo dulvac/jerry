@@ -116,7 +116,7 @@ public class SimpleFileHandler implements HttpRequestHandler {
     
     File file = new File(this.filesRoot, URLDecoder.decode(target, "UTF-8"));
     if (file.isDirectory()) {
-        file = getWelcomeFile(file);
+      file = getWelcomeFile(file);
     }
     String filePath = file.getPath();
     // Build response
