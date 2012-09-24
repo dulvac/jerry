@@ -45,31 +45,32 @@ public class RequestListener implements Runnable {
   // each request listener should have its own pool; TODO: is this best?
   protected final ExecutorService handlerPool;
   private final String listenerId;
+  private int listenPort;
 
+  public String getListenerId() {
+    return listenerId;
+  }
 
-  /**
-   *
-   *
-   * @param listenPort The port on which the thread listens
-   * @param filesRoot The document root of this listener
-   * @throws IOException If server socket cannot be opened
-   */
-  public RequestListener(final int listenPort, final String filesRoot, int connectionTimeout, int socketTimeout,
-                         int socketBufferSize, int workQueueSize) throws IOException {
+  public int getListenPort() {
+    return listenPort;
+  }
 
+  public RequestListener(RequestListenerConfiguration config) throws IOException {
+    listenPort = config.getListenPort();
+    String filesRoot = config.getFilesRoot();
     serverSocket = new ServerSocket(listenPort);
-    listenerId = "listener-" + listenPort;
+    listenerId = config.getListenerId() + "/" + listenPort;
     handlers = new HashMap<String, HttpRequestHandler>();
     handlers.put("*", new SimpleFileHandler(filesRoot));
 
     // Build parameters object for httpService
     this.httpParams = new BasicHttpParams();
-    this.httpParams.setParameter(CoreProtocolPNames.ORIGIN_SERVER, "JerryServer/1.0") /* JerryServer header */
+    this.httpParams.setParameter(CoreProtocolPNames.ORIGIN_SERVER, "JerryServer/1.0") /* 'Server' header */
       .setBooleanParameter(CoreConnectionPNames.TCP_NODELAY, true) /* Don't buffer network data */
       .setBooleanParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK, false) /* Disable this, adds overhead */
-      .setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, connectionTimeout) /* Timeout for establishing connection */
-      .setIntParameter(CoreConnectionPNames.SO_TIMEOUT, socketTimeout) /* Timeout if no data ; important to tweak keep-alive */
-      .setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, socketBufferSize);
+      .setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, config.getConnectionTimeout())
+      .setIntParameter(CoreConnectionPNames.SO_TIMEOUT, config.getSocketTimeout()) /* important to tweak keep-alive */
+      .setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, config.getSocketBufferSize());
 
     // Set up the HTTP protocol processor
     // This allows multiple interceptors to process an outgoing response incrementally (e.g. Adding headers)
@@ -89,7 +90,9 @@ public class RequestListener implements Runnable {
 
     // Initialize worker pool
     this.handlerPool = new ConnectionHandlerPoolBuilder()
-      .withWorkQueueSize(workQueueSize)
+      .withPoolSize(config.getWorkersCorePoolSize(), config.getWorkersMaxPoolSize())
+      .withKeepAliveTime(config.getWorkersKeepAliveTime())
+      .withWorkQueueSize(config.getWorkersQueueSize())
       .withThreadNamePrefix(listenerId)
       .build();
 

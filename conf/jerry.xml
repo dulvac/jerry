@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jerry>
+    <listeners>
+        <listener name="Listener0">
+            <port>8082</port>
+            <filesRoot>./www/</filesRoot>
+            <http>
+                <connection_timeout>3000</connection_timeout>
+                <socket_timeout>3000</socket_timeout>
+                <socket_buffer_size>16384</socket_buffer_size>
+            </http>
+            <workers>
+                <core_pool_size>300</core_pool_size>
+                <max_pool_size>5000</max_pool_size>
+                <keep_alive_time>2</keep_alive_time>
+                <queue_size>800</queue_size>
+            </workers>
+        </listener>
+    </listeners>
+</jerry>
