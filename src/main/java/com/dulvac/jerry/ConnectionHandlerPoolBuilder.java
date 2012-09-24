@@ -18,7 +18,7 @@ public class ConnectionHandlerPoolBuilder {
   private long keepAliveTime = 60;
   private static final TimeUnit unit = TimeUnit.SECONDS;
   private BlockingQueue<Runnable> workQueue;
-  private int workQueueSize;
+  private int workQueueSize = 0;
   private String threadNamePrefix = "ConnectionHandlerPool";
 
   /**
@@ -60,7 +60,6 @@ public class ConnectionHandlerPoolBuilder {
    */
   public ConnectionHandlerPoolBuilder withWorkQueueSize(int workQueueSize) {
     this.workQueueSize = workQueueSize;
-    workQueue = new ArrayBlockingQueue<Runnable>(this.workQueueSize);
     return this;
   }
 
@@ -69,8 +68,10 @@ public class ConnectionHandlerPoolBuilder {
    * @return new {@link ConnectionHandlerPool}
    */
   public ConnectionHandlerPool build() {
-    if (null == workQueue) {
+    if (workQueueSize <= 0) {
       workQueue = new LinkedBlockingQueue<Runnable>();
+    } else {
+       workQueue = new ArrayBlockingQueue<Runnable>(this.workQueueSize);
     }
     return new ConnectionHandlerPool(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadNamePrefix);
   }
