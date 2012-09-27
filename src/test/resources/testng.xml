@@ -1,0 +1,20 @@
+<suite verbose="0" name="Jerry test suite">
+    <test name="Simple tests">
+        <groups>
+            <define name="all">
+                <include name="functional"/>
+                <include name="unit"/>
+            </define>
+            <run>
+                <include name="all"/>
+            </run>
+        </groups>
+
+        <classes>
+            <class name="com.dulvac.jerry.handlers.SimpleFileHandlerTest"/>
+            <class name="com.dulvac.jerry.JerryServerTest"/>
+            <class name="com.dulvac.jerry.GetTests"/>
+            <class name="com.dulvac.jerry.TestUtils"/>
+        </classes>
+    </test>
+</suite>
