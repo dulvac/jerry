@@ -1,5 +1,7 @@
 package com.dulvac.jerry.handlers;
 
+import com.google.common.base.Charsets;
+
 import org.apache.http.HttpException;
 import org.apache.http.HttpInetConnection;
 import org.apache.http.HttpRequest;
@@ -29,7 +31,7 @@ import java.util.Locale;
 public class SimpleFileHandler implements HttpRequestHandler {
   private static final Logger logger = LoggerFactory.getLogger(SimpleFileHandler.class.getName());
   private final String filesRoot;
-  private String[] welcomeFiles = {"index.html", "index.htm"};
+  public static String[] welcomeFiles = {"index.html", "index.htm"};
 
   /**
    *
@@ -52,7 +54,7 @@ public class SimpleFileHandler implements HttpRequestHandler {
    * @param dir The path for which to return the index file, if it exists.
    * @return The full path of first index file which exists in this directory path, if it exists, otherwise return dir
    */
-  public File getWelcomeFile(File dir) {
+  public static File getWelcomeFile(File dir) {
     for (int i = 0; i < welcomeFiles.length; i++) {
       // TODO: This might be expensive
       File welcomeFile = new File(dir, welcomeFiles[i]);
@@ -89,7 +91,7 @@ public class SimpleFileHandler implements HttpRequestHandler {
                                                                     ContentType.create("text/html", "UTF-8"));
 
   /**
-   *
+   * Constructor
    * @param filesRoot The document root for the files to handle
    */
   public SimpleFileHandler(final String filesRoot) {
@@ -110,11 +112,11 @@ public class SimpleFileHandler implements HttpRequestHandler {
 
     final String method = getMethod(request);
     final String target = request.getRequestLine().getUri();
-    // get client address for logging TODO: ugly; make this lazy
+    // get client address for logging
     final String clientAddress = ((HttpInetConnection) context.getAttribute(ExecutionContext.HTTP_CONNECTION))
       .getRemoteAddress().getHostAddress();
-    
-    File file = new File(this.filesRoot, URLDecoder.decode(target, "UTF-8"));
+
+    File file = new File(this.filesRoot, URLDecoder.decode(target, Charsets.UTF_8.toString()));
     if (file.isDirectory()) {
       file = getWelcomeFile(file);
     }
@@ -132,7 +134,7 @@ public class SimpleFileHandler implements HttpRequestHandler {
       
     } else {
       response.setStatusCode(HttpStatus.SC_OK);
-      // TODO: Support different kinds of files/ mime-types
+      // TODO: Support different kinds of mime-types
       FileEntity body = new FileEntity(file, ContentType.create("text/html", (Charset) null));
       response.setEntity(body);
       logger.info("Request from {}. Sending file {}", clientAddress, filePath);
