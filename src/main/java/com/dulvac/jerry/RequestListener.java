@@ -42,19 +42,36 @@ public class RequestListener implements Runnable {
   private final HttpService httpService;
   private final HttpParams httpParams;
 
+  public HttpParams getHttpParams() {
+    return httpParams;
+  }
+
   // each request listener should have its own pool; TODO: is this best?
   protected final ExecutorService handlerPool;
-  private final String listenerId;
-  private int listenPort;
+  protected final String listenerId;
+  protected int listenPort;
 
+  /**
+   *
+   * @return The listener's name
+   */
   public String getListenerId() {
     return listenerId;
   }
 
+  /**
+   *
+   * @return The port on which the listener listens for requests
+   */
   public int getListenPort() {
     return listenPort;
   }
 
+  /**
+   *
+   * @param config A configuration object for this listener
+   * @throws IOException
+   */
   public RequestListener(RequestListenerConfiguration config) throws IOException {
     listenPort = config.getListenPort();
     String filesRoot = config.getFilesRoot();
@@ -120,7 +137,7 @@ public class RequestListener implements Runnable {
       }
     }
 
-    // close pool when exiting this loop; threads are daemon threads, but like being thorough
+    // close pool when exiting this loop; threads are daemon threads, but be thorough
     this.handlerPool.shutdown();
   }
 
