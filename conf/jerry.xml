@@ -2,7 +2,7 @@
 <jerry>
     <listeners>
         <listener name="Listener0">
-            <port>8082</port>
+            <port>8080</port>
             <filesRoot>./www/</filesRoot>
             <http>
                 <connection_timeout>3000</connection_timeout>
