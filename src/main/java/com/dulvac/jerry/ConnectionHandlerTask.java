@@ -24,7 +24,7 @@ public class ConnectionHandlerTask implements Runnable {
   private final String clientAddress;
 
   /**
-   *
+   * Constructor
    * @param httpservice 
    * @param conn
    */

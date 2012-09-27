@@ -36,6 +36,7 @@ public class ConnectionHandlerPool extends ThreadPoolExecutor {
 
   /**
    * Constructor
+   * <p>Also see the convenient builder {@see com.dulvac.jerry.ConnectionHandlerPoolBuilder}</p>
    *
    * @param corePoolSize
    * @param maximumPoolSize
