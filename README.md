@@ -1,5 +1,6 @@
+## Jerry Server
 Jerry is a *very* simple web browser done in Java.
-This is an educational project and should be treated as such.
+This project is just a sketch and should be treated as such.
 
 ## Description
 Jerry uses thread pools. No nio here.
@@ -31,9 +32,6 @@ Configuration files are found in `conf/`.
 * `logback.xml` - logging configuration; look at [the manual](http://logback.qos.ch/manual/) if you need help.
 * `jerry.xml` - server configuration; Allows adding multiple listeners on different ports and with different document
 roots.
-
-## Testing
-TBD
 
 ## Enhancements
 * Change architecture so it can accommodate something other than `httpcomponents`.
