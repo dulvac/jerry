@@ -64,7 +64,7 @@ public class RequestListenerConfiguration {
 
   /**
    *
-   * @return The timeout in seconds after which a new establishing connection times out
+   * @return The timeout in milliseconds after which a new establishing connection times out
    */
   public int getConnectionTimeout() {
     return config.getInt(HTTP_CONNECTION_TIMEOUT_NAME, HTTP_CONNECTION_TIMEOUT);
@@ -72,7 +72,7 @@ public class RequestListenerConfiguration {
 
   /**
    *
-   * @return The timeout in seconds after which an established connection times out
+   * @return The timeout in milliseconds after which an established connection times out
    */
   public int getSocketTimeout() {
     return config.getInt(HTTP_SOCKET_TIMEOUT_NAME, HTTP_SOCKET_TIMEOUT);
