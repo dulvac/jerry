@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 /**
@@ -47,10 +48,12 @@ public class ConnectionHandlerTask implements Runnable {
     } catch (SocketTimeoutException ex){
       // thrown when keep-alive period expires; configured in httpParams when creating HttpServerConnection
       logger.info("Socket timed out for {}", clientAddress);
-    } catch (IOException ex) {
-      logger.error("I/O error: ", ex);
+    } catch (SocketException ex) {
+      logger.warn("Socket error for {}", clientAddress);
     } catch (HttpException ex) {
       logger.error("Unrecoverable HTTP protocol violation: ", ex);
+    } catch (IOException ex) {
+      logger.error("I/O error: ", ex);
     } finally {
       try {
         this.conn.shutdown();
